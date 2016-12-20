@@ -1,0 +1,20 @@
+{
+  "name": "mdml",
+  "version": "0.1.0",
+  "description": "A simple markdown converter to compile as html.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vratuy",
+  "license": "MIT",
+  "bin": {
+    "mdml": "./index.js"
+  },
+  "dependencies": {
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0",
+    "marked": "^0.3.6"
+  }
+}

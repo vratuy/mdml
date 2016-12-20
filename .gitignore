@@ -1,0 +1,6 @@
+# Mac OS files
+.DS_Store
+
+# npm packages
+node_modules/
+
