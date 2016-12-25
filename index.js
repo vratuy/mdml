@@ -2,50 +2,47 @@
 const co = require('co');
 const fs = require('fs');
 const marked = require('marked');
+const path = require('path');
 const prompt = require('co-prompt');
 const program = require('commander');
 
-const start = function (file) {
-  let text = fs.readFileSync(file, 'utf8');
-  console.log(marked(text));
+const start = function (target) {
+  let stats = fs.statSync(target);
+
+  if (stats.isFile()) {
+    generate(target);
+  } else {
+    console.log('Directory is not supported yet.');
+  };
 };
 
-// List files and directories.
-const show = function (path) {
-  let basepath;
+const generate = function (target) {
+  let mdText = marked(fs.readFileSync(target, 'utf8'));
+  let name = path.parse(target).name;
+  let distName = './' + name + '.html';
 
-  fs.readdir(path, function (err, list) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    };
+  if (path.extname(target) === '.md') {
+    fs.writeFileSync(distName, mdText);
+  } else {
+    console.error('Cannot find *.md file.');
+    process.exit(1);
+  };
+}
 
-    list.forEach(function (item) {
-      basepath = process.argv[2] + item;
-
-      fs.stat(basepath, function (err, stats) {
-        if (stats.isFile()) {
-          console.log(basepath);
-        } else {
-          console.log(basepath + '/');
-        };
-      });
-    });
-  });
-};
-
-let fileName;
+let targetPath;
 
 program
   .version('0.1.0')
-  .arguments('<file>')
-  .action(function (file) {
-    fileName = file;
-    start(file);
+  .arguments('<targetPath>')
+  .action(function (target) {
+    if (target) {
+      start(target);
+    };
+    targetPath = target
   })
   .parse(process.argv);
 
-if (typeof fileName === 'undefined') {
+if (typeof targetPath === 'undefined') {
   console.error('No argument given.');
   process.exit(1);
 };
